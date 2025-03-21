@@ -1,3 +1,6 @@
 dotenv
 pytz
 telegram
+requests
+apscheduler
+logging
