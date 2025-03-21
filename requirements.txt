@@ -1,5 +1,5 @@
 dotenv
 pytz
-telegram
+python-telegram-bot
 requests
 apscheduler
