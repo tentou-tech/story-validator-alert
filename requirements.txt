@@ -3,4 +3,3 @@ pytz
 telegram
 requests
 apscheduler
-logging
