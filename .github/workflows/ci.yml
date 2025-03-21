@@ -1,0 +1,36 @@
+name: Continuous integration
+
+on:
+  push:
+    branches: main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    #runs-on: self-hosted
+  
+    steps:
+        - uses: actions/checkout@v3
+        - name: Set environment variable
+          run: |
+            SHORT_SHA_COMMIT=$(git rev-parse --short HEAD)
+            echo REGISTRY=ghcr.io >> $GITHUB_ENV
+            echo CONTAINER_RELEASE_IMAGE=ghcr.io/tentou-tech/story-validator-alert:${GITHUB_REF_NAME}_${SHORT_SHA_COMMIT} >> $GITHUB_ENV
+            
+        - name: Log in to the Container registry
+          uses: docker/login-action@v2
+          with:
+            registry: ${{ env.REGISTRY }}
+            username: ${{ github.actor }}
+            password: ${{ secrets.GITHUB_TOKEN }}
+
+        - name: Set up Docker Buildx
+          uses: docker/setup-buildx-action@v2
+
+        - name: Build and push
+          uses: docker/build-push-action@v4
+          with:
+            context: .
+            push: true
+            tags: |
+              ${{ env.CONTAINER_RELEASE_IMAGE }}
