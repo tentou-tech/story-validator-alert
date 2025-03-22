@@ -12,6 +12,7 @@ LCD_URL = os.getenv("LCD_URL")
 VALIDATOR_ADDRESS = os.getenv("VALIDATOR_ADDRESS")
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHANNEL_ID = os.getenv("TELEGRAM_CHANNEL_ID")
+INTERVAL = int(os.getenv("INTERVAL", 300))
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -70,9 +71,9 @@ def check_validator_tokens():
 
 # Schedule daily task with a specific timezone (e.g., UTC)
 scheduler = BlockingScheduler(timezone=pytz.UTC)
-scheduler.add_job(check_validator_tokens, 'interval', days=1)
+scheduler.add_job(check_validator_tokens, 'interval', seconds=INTERVAL)
 
 if __name__ == "__main__":
-    logging.info("Starting Telegram bot scheduler...")
+    logging.info(f"Starting Telegram bot scheduler with an interval of {INTERVAL} seconds...")
     check_validator_tokens()  # Run initially to fetch first value and send alert
     scheduler.start()
